@@ -1,0 +1,12 @@
+name: mnist-gan
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - tensorflow
+  - pytorch
+  - scikit-learn
+  - scikit-image
+  - pip
+  - pip:
+      - matplotlib  # Often used alongside the listed packages for visualization
