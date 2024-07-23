@@ -32,10 +32,21 @@ else:
     model = umap.UMAP(n_neighbors=5, n_components=2, random_state=42)
     pickle.dump(model, open(filename, 'wb'))
 
-umap_data = model.fit_transform(X)
+print("Fitting UMAP model")
+# pick 5000 random samples of X and y
+n_samples = 5000
+rand_indices = np.random.choice(X.shape[0], n_samples, replace=False)
+print(rand_indices)
+rand_x = X.iloc[rand_indices]
+rand_y = y.iloc[rand_indices]
+
+umap_data = model.fit_transform(rand_x)
 
 # Create a scatter plot of the UMAP data
-y_values = y.values.astype(int)
+y_values = rand_y.values.astype(int)
+print("Plotting UMAP data")
 plt.scatter(umap_data[:,0], umap_data[:,1], c=y_values, cmap='Spectral', s=1)
 plt.title('UMAP projection of the MNIST dataset', fontsize=24)
+# add a legend
+plt.colorbar()
 plt.show()
