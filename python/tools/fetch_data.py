@@ -1,52 +1,16 @@
-import pickle
-import os
-import umap
-import matplotlib.pyplot as plt
-from sklearn.datasets import fetch_openml
-import numpy as np
-
-
-# Fetch the MNIST dataset
-mnist = fetch_openml('mnist_784')
-
-# Access the data and target arrays
-X, y = mnist.data, mnist.target
-
-# Print the shape of the data
-print("Data shape:", X.shape)
-
-# Print the shape of the target
-print("Target shape:", y.shape)
-
-# save the data
-np.save('data.npy', X)
-np.save('target.npy', y)
-
-# plot the data as a umap using sklearn
-
-# Create a UMAP model
-filename = 'umap_model.sav'
-if os.path.exists(filename):
-    model = pickle.load(open(filename, 'rb'))
-else:
-    model = umap.UMAP(n_neighbors=5, n_components=2, random_state=42)
-    pickle.dump(model, open(filename, 'wb'))
-
-print("Fitting UMAP model")
-# pick 5000 random samples of X and y
-n_samples = 5000
-rand_indices = np.random.choice(X.shape[0], n_samples, replace=False)
-print(rand_indices)
-rand_x = X.iloc[rand_indices]
-rand_y = y.iloc[rand_indices]
-
-umap_data = model.fit_transform(rand_x)
-
-# Create a scatter plot of the UMAP data
-y_values = rand_y.values.astype(int)
-print("Plotting UMAP data")
-plt.scatter(umap_data[:,0], umap_data[:,1], c=y_values, cmap='Spectral', s=1)
-plt.title('UMAP projection of the MNIST dataset', fontsize=24)
-# add a legend
-plt.colorbar()
-plt.show()
+from keras.datasets.mnist import load_data
+from numpy import expand_dims
+# load mnist images
+def load_real_samples():
+	# load dataset
+	(trainX, trainy), (_, _) = load_data()
+	# expand to 3d, e.g. add channels
+	X = expand_dims(trainX, axis=-1)
+	# select all of the examples for a given class
+	selected_ix = trainy == 8
+	X = X[selected_ix]
+	# convert from ints to floats
+	X = X.astype('float32')
+	# scale from [0,255] to [-1,1]
+	X = (X - 127.5) / 127.5
+	return X

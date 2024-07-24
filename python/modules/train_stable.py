@@ -3,7 +3,7 @@ from os import makedirs
 from numpy import expand_dims
 from numpy import ones
 from keras.datasets.mnist import load_data
-from keras.optimizers import Adam
+from keras.optimizers import adamw
 from keras.models import Sequential
 from keras.initializers import RandomNormal
 from python.modules.discriminator import build_discriminator
@@ -13,6 +13,7 @@ from python.modules.generator import (
     generate_latent_points,
     generate_real_samples,
 )
+from python.tools.fetch_data import load_real_samples
 from python.tools.plot import (
 	plot_history,
 	summarize_performance,
@@ -29,7 +30,7 @@ def define_gan(generator, discriminator):
 	# add the discriminator
 	model.add(discriminator)
 	# compile model
-	opt = Adam(lr=0.0002, beta_1=0.5)
+	opt = adamw(lr=0.0002, beta_1=0.5)
 	model.compile(loss='binary_crossentropy', optimizer=opt)
 	return model
 
